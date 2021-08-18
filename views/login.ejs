@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.ico"> 
+    <!-- <link rel="stylesheet" type="text/css" href="css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/animate-custom.css" /> -->
+    <title>Login</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Codrops top bar -->
+        <div class="codrops-top">
+            <a href="">
+                <strong></strong>計量科研中心
+            </a>
+         
+            <div class="clr"></div>
+        </div><!--/ Codrops top bar -->
+        <header>
+            <h1>Manuscript 登入口</h1>
+
+        </header>
+        <section>				
+            <div id="container_demo" >
+                <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+                <a class="hiddenanchor" id="toregister"></a>
+                <a class="hiddenanchor" id="tologin"></a>
+                <div id="wrapper">
+                    <div id="login" class="animate form">
+                        <form  autocomplete="on" onsubmit="checkForm(); return false;" novalidate> 
+                            <h1>Log in</h1> 
+                            <p> 
+                                <label for="username" class="uname" data-icon="u" > Your email or username </label>
+                                <input id="username" name="username" required="required" type="text" value="sa"/>
+                            </p>
+                            <p> 
+                                <label for="password" class="youpasswd" data-icon="p"> Your password </label>
+                                <input id="password" name="password" required="required" type="password" value="server5566^.<"/> 
+                            </p>
+                           
+                            <p class="login button"> 
+                                <input type="submit" value="Login"  /> 
+                            </p>
+
+                        </form>
+                    </div>                   
+                </div>
+            </div>  
+        </section>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+ const $username = document.querySelector('#username');
+    const $password = document.querySelector('#password');
+    const r_fields = [$username, $password];
+    const infobar = $('#infobar');
+    const submitBtn = document.querySelector('button[type=submit]');
+
+    function checkForm() {
+        let isPass = true;
+
+        // r_fields.forEach(el => {
+        //     el.style.borderColor = '#CCCCCC';
+        //     el.nextElementSibling.innerHTML = '';
+        // });
+
+        // // TODO: 檢查資料格式
+        // if ($username.value.length < 1) {
+        //     isPass = false;
+        //     $username.style.borderColor = 'red';
+        //     $username.nextElementSibling.innerHTML = '請填寫正確的帳號';
+        // }
+        // if ($password.value.length < 2) {
+        //     isPass = false;
+        //     $password.style.borderColor = 'red';
+        //     $password.nextElementSibling.innerHTML = '請填寫密碼';
+        // }
+
+        if (isPass) {
+            fetch('login', {
+                method: 'POST',
+                // body: fd
+                body: JSON.stringify({
+                    username: $username.value,
+                    password: $password.value,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(resp=>{
+        if(resp.statuse<200||resp.status>=300)
+        throw new Error(`Request Fail with status${resp.stastatuse}`)
+    })
+    .then(json=> {
+                    console.log(json);
+                    if (json='undefined') {
+                        localStorage.setItem('jwtTest',JSON.stringify(json));
+                        location.href = '/home';
+                    } else {
+                        infobar.html(json.error || '帳號或密碼錯誤');
+                        infobar.removeClass('alert-success').addClass('alert-danger');
+                        submitBtn.style.display = 'block';
+                    }
+                    infobar.slideDown();
+                    setTimeout(() => {
+                        infobar.slideUp();
+                    }, 3000)
+                });
+
+               
+        } else {
+            submitBtn.style.display = 'block';
+        }
+    }
+
+</script>
+
+</html>

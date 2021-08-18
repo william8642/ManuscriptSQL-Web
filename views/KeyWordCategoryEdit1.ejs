@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+        table{
+        width: 100%;
+        border: 1px;
+        border-style: solid;
+    }
+    table td{
+        border: 0.5px;
+        border-style: solid;
+    }
+    .myForm{
+        padding-top: 10px;
+    }
+      
+    body{
+        background-color:#F5F5F5;
+            }
+            form{
+      margin-left: 10px;
+      margin-top: 20px;
+    }
+</style>
+<body>
+    <h3>修改Category</h3>
+
+    <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+    <form id='myForm' method="POST">
+      <div class="form-group">
+        <div class="box">
+          <div class="form-group">
+            <label for="Manuscript_Number"><span class="red-stars">**</span>Manuscript Number:</label>
+            <input type="text" class="Manuscript_Number" id="Manuscript_Number" size="30" value="<%= Manuscript_Number %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Old Category:  <%= Category %>
+                <!-- <option type="text" class="Old_Category" id="Old_Category" value="<%= Category %>"><%= Category %></option> -->
+            </label>
+          </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">New Category:</label>
+            <select name="Category" id="Category" value=''></select>
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput2">Old Category:  <%= Sub_Category %>
+              <!-- <option type="text" class="Old_Category" id="Old_Category" value="<%= Category %>"><%= Category %></option> -->
+          </label>
+        </div>
+      <div class="form-group">
+          <label for="formGroupExampleInput2">New Sub_Category:</label>
+          <select name="Sub_Category" id="Sub_Category" value=''></select>
+      </div>
+
+
+            <button type="submit" class="btn btn-info"  value="下一步">修改Category</button>
+        </div>    
+      </div>   
+    </form>
+
+    <button type="submit" class="btn btn-primary" onclick="javascript:location='./keyword'" style="margin-left: 10px;">回到新增keyword</button>
+
+        <form action="/ManuscriptEdit1" method="POST">
+          <h4 class="Manuscript_Title">請輸入查詢Manuscript_Number :</h4>
+          <input type="text" name="Manuscript_Number" class="ghost-input" placeholder="Enter a Manuscript_Number">
+          <button type="submit" class="btn btn-outline-success" style="margin-top: 10px;">送出</button>
+        </form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+
+
+document.getElementById('myForm');
+
+
+myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+
+  const infobar = $('#infobar');
+  const form = evt.target
+
+
+  const body = JSON.stringify({
+    Manuscript_Number: form.elements.Manuscript_Number.value,
+    Category: form.elements.Category.value,
+    Sub_Category:form.elements.Sub_Category.value,
+
+  })
+  console.log(987)
+  console.log(form.elements.Category.value)
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = document.getElementById('myForm')
+    
+
+  let isPass= true;
+    if(form.elements.Manuscript_Number.value.length < 3){
+      isPass = false;
+      alert('需輸入Manuscript_Number')
+    }
+    if(isPass){
+    fetch('/NBCategoryEdit',{method:'post',body,headers})
+    .then(response=>{
+      if(response.statuse<200||response.status>=300)
+      throw new Error(`Request Fail with status${response.stastatuse}`)
+      console.log(487)
+      console.log(response.statuse)
+    })
+    .then(json=>{
+      console.log(json);
+      if (json='undefined') {
+        infobar.html('修改成功');
+        infobar.removeClass('alert-danger').addClass('alert-success');
+        setTimeout(() => {
+            location.href = 'keyword';
+        }, 3000)
+      } else {
+        infobar.html('修改  失敗');
+        infobar.removeClass('alert-success').addClass('alert-danger');
+        }
+        infobar.slideDown();
+        setTimeout(() => {
+          infobar.slideUp();
+        }, 2500)
+  })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+});
+
+$(document).ready(function(){
+
+var $Category = $('#Category');
+
+$.ajax({
+  type:'get',
+  dataType:'json',
+  url:'http://140.112.92.40:3333/KeyWordCategory',
+
+  success:function(Category){
+    $("#Category").prepend("<option value='' selected='selected'></option>");
+    Category.map(function(data){
+      $('#Category').append('<option value="'+ data.Category+'">'+ data.Category+'</option>');
+    })
+  }
+})
+$.ajax({
+    type:'get',
+    dataType:'json',
+    url:'http://140.112.92.40:3333/KeyWordSub_Category',
+
+    success:function(Category){
+      $("#Sub_Category").prepend("<option value='' selected='selected'></option>");
+      Category.map(function(data){
+        $('#Sub_Category').append('<option value="'+ data.Sub_Category+'">'+ data.Sub_Category+'</option>');
+      })
+    }
+  })
+})
+
+
+</script>
+
+</html>

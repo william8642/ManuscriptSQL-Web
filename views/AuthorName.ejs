@@ -1,0 +1,21 @@
+
+      <form action="/AuthorName" method="POST" name="form2">
+        <div class="form-group">
+          <label for="formGroupExampleInput2">Name:</label>
+          <input type="text" class="Name" id="Name" >
+        </div>
+        <!-- <INPUT Type="Button" Name="Select" Value="查n" onClick="Select()"> -->
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Email:</label>
+            <input type="text" class="Email" id="Email" value="<%= Email %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Affiliated Institution:</label>
+            <input type="text" class="Affiliated_Institution" id="Affiliated_Institution" value="<%= Affiliated_Institution %>" >
+          </div>  
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Country:</label>
+            <input type="text" class="Country" id="Country" value="<%= Country %>">
+          </div>
+          <button type="submit" class="btn btn-outline-success" style="margin-top: 10px;">送出</button>
+      </form>

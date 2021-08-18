@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+        table{
+        width: 100%;
+        border: 1px;
+        border-style: solid;
+    }
+    table td{
+        border: 0.5px;
+        border-style: solid;
+    }
+    .KeyWordform{
+        padding-top: 10px;
+
+    }
+    body{
+        background-color:#F5F5F5;
+    }
+    form{
+      margin-left: 10px;
+      margin-top: 20px;
+    }
+</style>
+<body>
+<div class= "box">
+    <h3>修改Reviewer</h3>
+
+      <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+
+    <form class="myForm" id ="myForm">
+      <div class="form-group">
+        <label for="Manuscript_Number"><span class="red-stars">**</span>Manuscript Number: </label>
+        <input type="text" class="Manuscript_Number" id="Manuscript_Number" size="30" value="<%= Manuscript_Number %>" >
+      </div>                                                                                                                                                                                                                                                                                                                                                                                
+        <div class="form-group">
+          <label for="formGroupExampleInput">Name: </label>
+          <input type="text" class="Name" id="Name" size="30" value="<%= Name %>">
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput2">Name_Id:</label>
+          <input type="text" id="Name_Id" name="Name_Id" value="<%= Name_Id %>"   readonly  unselectable="on">
+        </div> 
+        <div class="form-group">
+          <label for="formGroupExampleInput2">Affiliated Institution: </label>
+          <input type="text" class="Affiliated_Institution" id="Affiliated_Institution" size="30" value="<%= Affiliated_Institution %>">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Email: </label>
+            <input type="text" class="Email" id="Email"size="30"  value="<%= Email %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Country: </label>
+            <input type="text" class="Country" id="Country"size="30" value="<%= Country %>" >
+          </div>
+
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Invited Date: </label>
+            <input type="text" class="Invited_Date" id="Invited_Date"size="30" value="<%= Invited_Date %>">
+          </div>
+
+
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Responsed</label>
+            <input type="text" class="Responsed" id="Responsed"size="30" value="<%= Responsed %>" >
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Responsed Date: </label>
+            <input type="text" class="Responsed_Date" id="Responsed_Date"size="30" value="<%= Responsed_Date %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Decision: </label>
+            <input type="text" class="Decision" id="Decision" size="30" value="<%= Decision %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Completed Date: </label>
+            <input type="text" class="Completed_Date" id="Completed_Date"size="30" value="<%= Completed_Date %>">
+          </div>
+          <button type="submit" class="btn btn-info"  value="送出表單" >修改Reviewer</button> 
+      </form>
+
+      <button type="submit" class="btn btn-primary" onclick="javascript:location='./Review'" style="margin-left: 10px; margin-top: 5px;">回到新增Author</button>
+      
+      <form action="/ReviewEdit1" method="POST">
+        <h4 class="Manuscript_Title">請輸入查詢Manuscript_Number :</h4>
+          <div class="form2" id="TextBoxDiv2">
+          <input type="text" class="Manuscript_Number" name="Manuscript_Number" size="30" placeholder="Manuscript_Number">
+          </div>
+        <div class="form2" id="TextBoxDiv2">
+        <input type="text" class="Name" name="Name" size="30" placeholder="Name" style="margin-top: 10px;">
+        </div>
+        <button type="submit" class="btn btn-outline-success" style="margin-top: 10px;">送出</button>
+      </form>
+  
+
+</div>          
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+document.getElementById('myForm');
+
+myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+
+  const infobar = $('#infobar');
+  const form = evt.target
+
+  var startInvited = form.elements.Invited_Date.value;
+    var convertedStartDate = new Date(startInvited);
+    var month = convertedStartDate.getMonth()+1;
+    var day = convertedStartDate.getDate();
+    var year = convertedStartDate.getFullYear();
+    var Invited_Date =  year+ "/" +  month+ "/" + day;
+    if(Invited_Date === "NaN/NaN/NaN"){
+      Invited_Date=""
+    }
+
+    var startResponsed = form.elements.Responsed_Date.value;
+    var convertedStartDate = new Date(startResponsed);
+    var month = convertedStartDate.getMonth()+1;
+    var day = convertedStartDate.getDate();
+    var year = convertedStartDate.getFullYear();
+    var Responsed_Date =  year+ "/" +  month+ "/" + day;
+    if(Responsed_Date === "NaN/NaN/NaN"){
+      Responsed_Date=""
+    }
+
+
+    var startCompleted = form.elements.Completed_Date.value;
+    var convertedStartDate = new Date(startCompleted);
+    var month = convertedStartDate.getMonth()+1;
+    var day = convertedStartDate.getDate();
+    var year = convertedStartDate.getFullYear();
+    var Completed_Date =  year+ "/" +  month+ "/" + day;
+    if(Completed_Date === "NaN/NaN/NaN"){
+      Completed_Date=""
+    }
+
+
+  const body = JSON.stringify({
+    Manuscript_Number: form.elements.Manuscript_Number.value,
+    Name: form.elements.Name.value,
+    Name_Id:form.elements.Name_Id.value,
+    Affiliated_Institution: form.elements.Affiliated_Institution.value,
+    Email: form.elements.Email.value,
+    Country: form.elements.Country.value,
+    Invited_Date: Invited_Date,
+    Responsed: form.elements.Responsed.value,
+    Responsed_Date: Responsed_Date,
+    Decision: form.elements.Decision.value,
+    Completed_Date: Completed_Date
+  })
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = document.getElementById('myForm')
+    
+//   console.log(Manuscript_Number)
+  let isPass= true;
+    if(form.elements.Manuscript_Number.value.length < 3){
+      isPass = false;
+      alert('需輸入Manuscript_Number')
+    }
+    if(isPass){
+    fetch('/ReviewChangeEdit/:Manuscript_Number/:Name',{method:'post',body,headers})
+    .then(response=>{
+      if(response.statuse<200||response.status>=300)
+      throw new Error(`Request Fail with status${response.stastatuse}`)
+      console.log(487)
+      console.log(response.statuse)
+    })
+    .then(json=>{
+      console.log(json);
+      if (json='undefined') {
+        infobar.html('修改成功');
+        infobar.removeClass('alert-danger').addClass('alert-success');
+        setTimeout(() => {
+            location.href = 'ReviewEdit1';
+        }, 3000)
+      } else {
+        infobar.html('修改 失敗');
+        infobar.removeClass('alert-success').addClass('alert-danger');
+        }
+        infobar.slideDown();
+        setTimeout(() => {
+          infobar.slideUp();
+        }, 2500)
+  })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+});
+
+</script>
+
+</html>

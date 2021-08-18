@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+        table{
+        width: 100%;
+        border: 1px;
+        border-style: solid;
+    }
+    table td{
+        border: 0.5px;
+        border-style: solid;
+    }
+    body{
+        background-color:#F5F5F5;
+            }
+    form{
+      margin-left: 10px;
+      margin-top: 20px;
+    }
+</style>
+<body>
+<h3>新增Author</h3>
+    
+  <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+    <form class ="myForm" name ="myForm">
+      <div class="form-group">
+        <label for="Manuscript_Number"><span class="red-stars">**</span>Manuscript Number:</label>
+        <input type="text" class="Manuscript_Number" id="Manuscript_Number" size="30" >
+      </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput2">Order:</label>
+          <input type="text" class="Order" id="Order" >
+        </div>
+            <div class="form-group">
+              <label for="formGroupExampleInput2">Name:</label>
+              <input type="text" id="Name" name="Name" value="">
+              <!-- <button type="button" class="btn btn-outline-secondary btn-sm" size="25" onclick="Namebtn()" >查詢Name</button> -->
+              <button type="button" class="btn btn-outline-success btn-sm" size="25" onclick= "openwin()">查詢Name清單</button>
+            </div>  
+            <div class="form-group">
+              <label for="formGroupExampleInput2">Name_Id:</label>  
+              <input  type="text" name="Name_Id" id="Name_Id" value=""  readonly  unselectable="on" >
+            </div>
+            <!-- <button type="button" class="btn btn-link" size="25" onclick="Nameclean()" >清除Name</button>   -->
+            <div class="form-group">
+              <label for="formGroupExampleInput2">Email:</label>
+              <input type="text" class="Email" id="Email" size="28" value="">
+            </div>
+            <div class="form-group">
+              <label for="formGroupExampleInput2">Affiliated Institution:</label>
+              <input type="text" class="Affiliated_Institution" id="Affiliated_Institution" size="32" >
+            </div>  
+            <div class="form-group">
+              <label for="formGroupExampleInput2">Country:</label>
+              <input type="text" class="Country" id="Country" >
+            </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Corresponding:</label>
+            <input type="checkbox" class="Corresponding" id="Corresponding" value="">
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn" value="送出表單">新增Author</button>                      
+    </form>
+    <!-- 下面是輸入要修改後的id會跳到修改頁面 -->
+      <form action="/AuthorEdit1" method="POST">
+        <h4 class="Manuscript_Title">輸入要修改的Author:</h4>
+        <span id="NoName" style="color:red"></span>
+          <div class="form2" id="TextBoxDiv2">
+          <input type="text" class="Manuscript_Number" name="Manuscript_Number" size="30" placeholder="Manuscript_Number" value="">
+          </div>
+        <div class="form2" id="TextBoxDiv2">
+        <input type="text" class="Name" name="Name" size="30" placeholder="Name" style="margin-top: 10px;">
+        </div>
+      <button type="submit" class="btn btn-outline-success" style="margin-top: 10px;">送出</button>
+      </form>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+var btn = document.getElementById('btn');
+
+// 按鈕會先暫時消失，避免附輸入
+btn.onclick = function () {
+  this.style.display = 'none';
+};
+
+// 跳出查詢Name_list1視窗
+function openwin() {
+　window.open ("Name_list1", "Name_list1", "height=700, width=1000, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no") 
+};
+
+// Check box 0與1轉換
+$('#Corresponding').on('change', function(){
+   this.value = this.checked ? 1 : 0;
+}).change();
+
+
+// 新增資料的fetch js
+document.getElementById('myForm');
+
+myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+
+  const form = evt.target
+  const infobar = $('#infobar');
+  const submitBtn = document.querySelector('button[type=submit]');
+
+  var Sid = form.elements.Name_Id.value;
+  if(Sid === ''){
+    Sid = Math.floor(Math.random()*99999);
+  }
+  console.log(Sid)
+  const body = JSON.stringify({
+    Manuscript_Number: form.elements.Manuscript_Number.value,
+    Order: form.elements.Order.value,
+    Name: form.elements.Name.value,
+    Name_Id:Sid,
+    Email: form.elements.Email.value,
+    Affiliated_Institution: form.elements.Affiliated_Institution.value,
+    Country: form.elements.Country.value,
+    Corresponding: form.elements.Corresponding.value
+  })
+
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = 
+    document.getElementById('myForm')
+    let isPass= true;
+    if(form.elements.Manuscript_Number.value.length < 4){
+      isPass = false;
+      alert('Manuscript_Number格式錯誤')
+    }
+    if(isPass){
+      fetch('/Authoradd',{method:'post',body,headers})
+      .then(resp=>{
+        if(resp.statuse<200||resp.status>=300)
+        throw new Error(`Request Fail with status${resp.stastatuse}`)
+      })
+      .then(json=>{
+        console.log(json)
+      })
+      .then(obj => {
+        console.log(123456789)
+        console.log(obj);
+        if (obj='undefined') {
+          infobar.html('新增成功');
+          infobar.removeClass('alert-danger').addClass('alert-success');
+          setTimeout(() => {
+            document.getElementById("Order").value++;
+            document.getElementById("Name").value  ="";
+            document.getElementById("Name_Id").value  ="";
+            document.getElementById("Email").value  ="";
+            document.getElementById("Affiliated_Institution").value  ="";
+            document.getElementById("Country").value  ="";
+            document.getElementById("Corresponding").checked = false;
+            document.getElementById("Corresponding").value = "0";
+            document.getElementById('btn').style = 'display: ture';
+          }, 3000)
+        }else{
+          infobar.html('新增失敗');
+          infobar.removeClass('alert-success').addClass('alert-danger');
+        }
+          infobar.slideDown();
+          setTimeout(() => {
+            infobar.slideUp();
+          }, 2500)
+      })
+      .catch(function(error){
+        console.log(error);
+      });
+    }
+});
+
+
+// function Namebtn(){
+// var $Name = $('#Name');
+
+// const nameElement = document.getElementById("Name");
+// const name = nameElement.value;
+
+// const url_api = `http://140.112.92.40:3333/Namesearch/${name}`;
+// // console.log(url_api)
+// $.ajax({
+//   type:'get',
+//   dataType:'json',
+//   url:url_api,
+// })
+//   .done(function(data){
+//     var nbdata = data[0]
+
+//     $.each(nbdata, function(value,data){
+      
+//       var datalen = data
+
+//       if(document.getElementById("Name").value= data.Name)
+//           document.getElementById("Name").value = data.Name
+//           $('#Name_Id').append('<option value="'+data.Name_Id+'">'+data.Name_Id+'</option>')
+//     })
+//   })
+// }
+
+
+
+// function Namebtn(){
+// var $Name = $('#Name');
+
+// const nameElement = document.getElementById("Name");
+// const name = nameElement.value;
+
+// const url_api = `http://140.112.92.40:3333/Authors`;
+// // console.log(url_api)
+// $.ajax({
+//   type:'get',
+//   dataType:'json',
+//   url:url_api,
+// })
+//   .done(function(data){
+//     var nbdata = data[0]
+
+//     $.each(nbdata, function(value,data){
+      
+//       var datalen = data
+
+//       if(document.getElementById("Name").value= data.Name)
+//           document.getElementById("Name").value = data.Name
+//           $('#Name_Id').append('<option value="'+data.Name_Id+'">'+data.Name_Id+'</option>')
+//     })
+//   })
+// }
+
+
+
+
+
+// $(document).on('click', '#Name_Id', function(){
+//   const nameElement = document.getElementById("Name");
+//   const name = nameElement.value;
+//   var Name_Id = $(this).val();
+
+//   const url_api = `http://140.112.92.40:3333/Namesearch/${name}/${Name_Id}`;
+//   $.ajax({
+//   type:'get',
+//   dataType:'json',
+//   url:url_api,
+//   })
+
+//   .done(function(data){
+//     if($('#Name_Id').value = Name_Id){
+//       document.getElementById("Email").value = (data[0][0].Email);
+//       document.getElementById("Affiliated_Institution").value = data[0][0].Affiliated_Institution;
+//       document.getElementById("Country").value =  data[0][0].Country;
+//       console.log(data[0][0])
+//     }
+//   })
+// })
+
+//   function Nameclean(){
+//     document.getElementById("Name_Id").innerHTML = "";
+//     document.getElementById("Email").value ="";
+//     document.getElementById("Affiliated_Institution").value ="";
+//     document.getElementById("Country").value ="";
+//   }
+
+
+
+
+
+    </script>
+</body>
+</html>

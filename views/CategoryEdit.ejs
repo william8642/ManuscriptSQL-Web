@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    
+    <style>
+
+body{
+        background-color:#F5F5F5;
+            }
+form{
+      margin-left: 10px;
+      margin-top: 20px;
+    }
+
+    </style>
+</head>
+
+<body>
+       <h3>更新Category</h3>
+
+      <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+
+<form id='myForm' method="POST" action="keyword">
+  <div id='TextBoxesGroup'>
+    <div class="form-group">
+      <label for="formGroupExampleInput1">更新前Category:</label>
+      <select name="Category" id="Category" value=''></select>
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">更新後Category:</label>
+      <input type="text" class="Category_new" id="Category_new" name ="Category_new"size="30" >
+    </div>
+  </div>  
+    <button type="submit" class="btn btn-info"  value="送出表單">更新Category</button>
+    <div class="form-group" style="margin-top: 15px;">
+      <button type="button" class="btn btn-primary" onclick= "javascript:location.href= '/keyword'"  >回到新增KeyWord頁面</button>
+    </div> 
+    <button type="button" class="btn btn-danger" onclick="del()">刪除</button>
+
+  </form>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script >
+
+document.getElementById('myForm');
+
+myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+  const form = evt.target
+  const infobar = $('#infobar');
+  
+
+  const body = JSON.stringify({
+    Category: form.elements.Category.value,
+    Category_new: form.elements.Category_new.value
+  })
+
+  console.log(form.elements.Category.value)
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = document.getElementById('myForm')
+  let isPass= true;
+  if(form.elements.Category.value.length < 1){
+    isPass = false;
+    alert('Manuscript_Number格式錯誤')
+  }
+    if(isPass){
+    fetch('/CategoryEdit',{method:'post',body,headers})
+    .then(resp=>{
+      if(resp.statuse<200||resp.status>=300)
+      throw alert("帳號密碼輸入錯誤")
+    })
+    .then(json=>{
+      // console.log(json)
+    })
+    .then(obj => {
+      if (obj='undefined') {
+        infobar.html('修改成功');
+        infobar.removeClass('alert-danger').addClass('alert-success');
+        setTimeout(() => {
+          document.getElementById("Category").value  ="";
+          document.getElementById("Category_new").value  ="";                         
+        }, 2000)
+      } else {
+        infobar.html('修改成功');
+        infobar.removeClass('alert-success').addClass('alert-danger');
+      }
+        infobar.slideDown();
+        setTimeout(() => {
+          infobar.slideUp();
+        }, 2000)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+    }
+});
+
+$(document).ready(function(){
+  var $Category = $('#Category');
+  $.ajax({
+    type:'get',
+    dataType:'json',
+    url:'http://140.112.92.40:3333/KeyWordCategory',
+    success:function(Category){
+      Category.map(function(data){
+        $('#Category').append('<option value="'+ data.Category+'">'+ data.Category+'</option>');
+      })
+    }
+  })
+});
+
+function del(){
+  const infobar = $('#infobar');
+  const CategoryElement = document.getElementById("Category");
+  const Category = CategoryElement.value;
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const body = JSON.stringify({
+    Category:Category
+  })
+  answer = confirm("確定要刪除嗎？");
+	if (answer)
+  fetch('/Categorydel',{method:'post',body,headers})
+  .then(resp=>{
+      if(resp.statuse<200||resp.status>=300)
+      throw new Error(`Request Fail with status${resp.stastatuse}`)
+  })
+  .then(json=>{
+    console.log(123456789)
+    if (obj='undefined') {
+      console.log(json);
+      infobar.html('刪除成功');
+      infobar.removeClass('alert-danger').addClass('alert-success');
+      setTimeout(() => {
+        location.href = 'CategoryEdit';
+      }, 3000)
+    } else {
+      infobar.html('刪除失敗');
+      infobar.removeClass('alert-success').addClass('alert-danger');
+    }
+    infobar.slideDown();
+    setTimeout(() => {
+      infobar.slideUp();
+    }, 2500)
+  })
+  .catch(function(error){
+    console.log(error);
+  });
+}
+
+</script>
+
+</body>
+
+</html>

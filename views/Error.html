@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+.h1{
+  color: red;
+}
+    </style>
+</head>
+
+<body>
+
+  <button ib="year2018" name="year2018" class="year2018" value="2018" onclick="btn18()">2018</button>
+  <button ib="year2019" name="year2019" class="year2019" value="2019" onclick="btn19()">2019</button>
+
+  <div class="form-group">
+    <p name="list" id="list" value=''></p>
+  </div>
+  
+    <script>
+
+function btn18(){
+  const list = document.getElementById("list")
+  const show = `<a class ="dropdown-item" name="Agr" onclick="ck()">Agr</a> 
+                <a class ="dropdown-item" name="BioBiochem" onclick="ck()">BioBiochem</a>`
+  list.innerHTML= show
+}
+
+
+function btn19(){
+  const list = document.getElementById("list")
+  const show = `<a class ="dropdown-item" name="Agr" onclick="ck()">ChemEng</a>`
+
+  list.innerHTML= show
+}
+
+
+function ck(){
+  alert('good')
+}
+
+
+    </script>
+</body>
+
+</html>

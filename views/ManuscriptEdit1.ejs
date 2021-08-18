@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+        table{
+        width: 100%;
+        border: 1px;
+        border-style: solid;
+    }
+    table td{
+        border: 0.5px;
+        border-style: solid;
+    }
+    .myForm{
+        padding-top: 10px;
+    }
+      
+    body{
+        background-color:#F5F5F5;
+            }
+            form{
+      margin-left: 10px;
+      margin-top: 20px;
+    }
+</style>
+<body>
+    <h3>修改Manuscript Number</h3>
+
+    <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+
+    <form id='myForm' method="POST">
+      <div class="form-group">
+        <div class="box">
+          <div class="form-group">
+            <label for="Manuscript_Number"><span class="red-stars">**</span>Manuscript Number:</label>
+            <input type="text" class="Manuscript_Number" id="Manuscript_Number" size="30" value="<%= Manuscript_Number %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Manuscript Title:</label>
+            <input type="text" class="Manuscript_Title" id="Manuscript_Title" size="30"  value="<%= Manuscript_Title %>"> 
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Initial Date Submitted:</label>
+            <input type="text" class="Initial_DateSubmitted" id="Initial_DateSubmitted" size="30" value="<%= Initial_DateSubmitted %>">
+          </div>
+          <div class="form-group">
+              <label for="formGroupExampleInput2">Status:</label>
+              <input type="text" class="Status" id="Status" value="<%= Status %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Status Date:</label>
+            <input type="text" class="Status_Date" id="Status_Date" value="<%= Status_Date %>">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput2">Handing editor:</label>
+            <input type="text" class="Handing_editor" id="Handing_editor"  value=" <%= Handing_editor %>">
+          </div>
+            <button type="submit" class="btn btn-info" onclick="setTimeout('retorelmageButtom()',3000);" value="下一步">修改Manuscript Number</button>
+        </div>    
+      </div>   
+    </form>
+
+    <button type="submit" class="btn btn-primary" onclick="javascript:location='./Manuscript'" style="margin-left: 10px;">回到新增Manuscript Number</button>
+
+        <form action="/ManuscriptEdit1" method="POST">
+          <h4 class="Manuscript_Title">請輸入查詢Manuscript_Number :</h4>
+          <input type="text" name="Manuscript_Number" class="ghost-input" placeholder="Enter a Manuscript_Number">
+          <button type="submit" class="btn btn-outline-success" style="margin-top: 10px;">送出</button>
+        </form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+  document.getElementById('myForm');
+
+
+myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+
+  const infobar = $('#infobar');
+  const form = evt.target
+
+
+  var startDate = form.elements.Status_Date.value;
+    var convertedStartDate = new Date(startDate);
+    var month = convertedStartDate.getMonth()+1;
+    var day = convertedStartDate.getDate();
+    var year = convertedStartDate.getFullYear();
+    var Status_Date =  year+ "/" +  month+ "/" + day;
+    if(Status_Date === "NaN/NaN/NaN"){
+      Status_Date=""
+    }
+
+
+  const body = JSON.stringify({
+    Manuscript_Number: form.elements.Manuscript_Number.value,
+    Manuscript_Title: form.elements.Manuscript_Title.value,
+    Status: form.elements.Status.value,
+    Initial_DateSubmitted: form.elements.Initial_DateSubmitted.value,
+    Status_Date: Status_Date,
+    Handing_editor: form.elements.Handing_editor.value
+  })
+  console.log(987)
+  console.log(form.elements.Manuscript_Title.value)
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = document.getElementById('myForm')
+    
+
+  let isPass= true;
+    if(form.elements.Manuscript_Number.value.length < 3){
+      isPass = false;
+      alert('需輸入Manuscript_Number')
+    }
+    if(isPass){
+    fetch('/ManuscriptNBEdit/:Manuscript_Number',{method:'post',body,headers})
+    .then(response=>{
+      if(response.statuse<200||response.status>=300)
+      throw new Error(`Request Fail with status${response.stastatuse}`)
+      console.log(487)
+      console.log(response.statuse)
+    })
+    .then(json=>{
+      console.log(json);
+      if (json='undefined') {
+        infobar.html('修改成功');
+        infobar.removeClass('alert-danger').addClass('alert-success');
+        setTimeout(() => {
+            location.href = 'ManuscriptEdit1';
+        }, 3000)
+      } else {
+        infobar.html('修改  失敗');
+        infobar.removeClass('alert-success').addClass('alert-danger');
+        }
+        infobar.slideDown();
+        setTimeout(() => {
+          infobar.slideUp();
+        }, 2500)
+  })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+});
+
+
+</script>
+
+</html>

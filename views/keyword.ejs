@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    
+    <style>
+
+body{
+        background-color:#F5F5F5;
+            }
+form{
+      margin-left: 10px;
+      margin-top: 20px;
+    }
+
+    </style>
+</head>
+
+<body>
+    <h3>新增KeyWord</h3>
+
+      <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+
+<form id='myForm' method="POST" action="keyword">
+  <div id='TextBoxesGroup'>
+    <div class="form-group" id="TextBoxDiv1">
+      <label for="Manuscript_Number"><span class="red-stars">**</span>Manuscript Number:</label>
+      <input type="text" class="Manuscript_Number" id="Manuscript_Number" size="30">
+    </div>
+    <!-- <div class="form-group">
+      <label for="formGroupExampleInput2">SEQNO:</label>
+      <input type="text" class="SEQNO" id="SEQNO" >
+    </div> -->
+    <div class="form-group">
+      <label for="formGroupExampleInput2">KeyWord:</label>
+      <input type="text" class="KeyWord" id="KeyWord" name ="KeyWord"size="25%" value="" >
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Category:</label>
+      <select name="Category" id="Category" value=''></select>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.open(' ./KeyWordCategoryadd ', 'KeyWordCategoryadd', config='height=500,width=500');" >新增Category</button>
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Sub_Category:</label>
+      <select name="Sub_Category" id="Sub_Category" value=''></select>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.open(' ./KeyWordSub_Categoryadd ', 'KeyWordCategoryadd', config='height=500,width=500');" >新增Sub_CategoryEdit</button>
+    </div>
+  </div>  
+    <button type="submit" class="btn btn-primary"  value="送出表單">新增KeyWord</button>
+    
+  </form>
+
+  <form >
+    <button type="button" class="btn btn-info" onclick= "javascript:location.href= '/CategoryEdit'" >修改Category</button>
+    <button type="button" class="btn btn-info" onclick= "javascript:location.href= '/Sub_CategoryEdit'" >修改Sub_CategoryEdit</button>
+  </form>
+
+  <!-- <input type='button' value='Add Button' id='addButton'>
+  <input type='button' value='Remove Button' id='removeButton'> -->
+
+  <form action="/KeyWordEdit1" method="POST">
+    <h4 class="Manuscript_Title">修改KeyWord</h4>
+    <input type="text" name="Manuscript_Number" class="ghost-input" placeholder="請輸入Manuscript_Number" size="25">
+    <button type="submit" class="btn btn-outline-success">送出</button>
+  </form>
+
+  <form action="/KeyWordCategoryEdit1" method="POST">
+    <h4 class="Manuscript_Title">修改Category</h4>
+    <input type="text" name="Manuscript_Number" class="ghost-input" placeholder="請輸入Manuscript_Number" size="25">
+    <button type="submit" class="btn btn-outline-success">送出</button>
+  </form>
+
+
+
+  
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script >
+
+
+// function CCC(){
+//   ('myForm1',evt=>{
+//   evt.preventDefault()
+//   const form1 = evt.target
+
+// // var $Category_old = $('#Category_old');
+// // var $Category_new = $('#Category_new');
+
+// // const Category_old = document.getElementById("Category_old");
+// // const Category_new = document.getElementById("Category_new");
+// // const Category_old = Category_old_Element.value;
+// // const Category_new = Category_new_Element.value;
+// const infobar = $('#infobar');
+
+// console.log(5566)
+// console.log(form1.Category_old.value)
+
+// const body = JSON.stringify({
+//   Category_old: form1.Category_old.value,
+//   Category_new: form1.Category_new.value
+//   })
+//   const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+
+//     fetch('/CategoryEdit',{method:'post',body,headers})
+//     .then(resp=>{
+//       if(resp.statuse<200||resp.status>=300)
+//       throw alert("Manuscript_Number已存在")
+//     })
+//     .then(json=>{
+//       // console.log(json)
+//     })
+//     .then(obj => {
+//                     console.log(123456789)
+//                     console.log(obj);
+//                     if (obj='undefined') {
+//                         infobar.html('新增成功');
+//                         infobar.removeClass('alert-danger').addClass('alert-success');
+//                         setTimeout(() => {
+//                           // document.getElementById("SEQNO").value++;
+                          
+//                         }, 3000)
+//                     } else {
+//                         infobar.html('新增失敗');
+//                         infobar.removeClass('alert-success').addClass('alert-danger');
+//                     }
+//                     infobar.slideDown();
+//                     setTimeout(() => {
+//                         infobar.slideUp();
+//                     }, 2000)
+//       })
+//     .catch(function(error){
+//       console.log(error);
+//     });
+// })
+// }
+
+
+document.getElementById('myForm');
+
+myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+  const form = evt.target
+  const infobar = $('#infobar');
+
+  const body = JSON.stringify({
+    Manuscript_Number: form.elements.Manuscript_Number.value,
+    KeyWord: form.elements.KeyWord.value,
+    Category: form.elements.Category.value,
+    Sub_Category:form.elements.Sub_Category.value
+  })
+
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = document.getElementById('myForm')
+    let isPass= true;
+    if(form.elements.Manuscript_Number.value.length < 4){
+      isPass = false;
+      alert('Manuscript_Number格式錯誤')
+    }
+    if(isPass){
+    fetch('/KeyWordAdd',{method:'post',body,headers})
+    .then(resp=>{
+      if(resp.statuse<200||resp.status>=300)
+      throw alert("Manuscript_Number已存在")
+    })
+    .then(json=>{
+      // console.log(json)
+    })
+    .then(obj => {
+      // console.log(123456789)
+      // console.log(obj);
+      if (obj='undefined') {
+          infobar.html('新增成功');
+          infobar.removeClass('alert-danger').addClass('alert-success');
+          setTimeout(() => {
+            // document.getElementById("SEQNO").value++;
+            document.getElementById("KeyWord").value  ="";
+            
+          }, 3000)
+      } else {
+          infobar.html('新增失敗');
+          infobar.removeClass('alert-success').addClass('alert-danger');
+      }
+      infobar.slideDown();
+      setTimeout(() => {
+          infobar.slideUp();
+      }, 2000)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+});
+
+$(document).ready(function(){
+
+  var $Category = $('#Category');
+
+  $.ajax({
+    type:'get',
+    dataType:'json',
+    url:'http://140.112.92.40:3333/KeyWordCategory',
+
+    success:function(Category){
+      $("#Category").prepend("<option value='' selected='selected'></option>");
+      Category.map(function(data){
+        $('#Category').append('<option value="'+ data.Category+'">'+ data.Category+'</option>');
+      })
+    }
+  })
+})
+
+$(document).on('change', '#Category', function(){
+  var $Category = $('#Category');
+  var $Sub_Category = $('#Sub_Category');
+  const CategoryElement = document.getElementById("Category");
+  const Category = CategoryElement.value;
+  var $Sub = $('#Sub');
+  console.log(13255)
+  console.log(document.getElementsByClassName("Sub").value)
+  
+  $Category.change(function(e){
+    document.getElementById("Sub_Category").innerHTML = "";
+  })
+  
+$.ajax({
+  type:'get',
+  dataType:'json',
+  url:`http://140.112.92.40:3333/Sub_CategoryEdit/${Category}`,
+
+  success:function(Sub_Category){ 
+    // console.log(Sub_Category[0])
+    var arrSub_Category=Sub_Category[0]
+    var cll =  document.getElementsByClassName("Sub").length=0
+    arrSub_Category.map(function(data){
+      $('#Sub_Category').append('<option  id="Sub" name="Sub" class="Sub" value="'+ data.Sub_Category+'">'+ data.Sub_Category+'</option>');
+    })
+  }
+})
+})
+
+
+Sub_Category
+
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

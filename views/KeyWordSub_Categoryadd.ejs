@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <h3>新增Category</h3>
+
+    <div id="infobar" class="alert alert-success" role="alert" style="display: none"></div>
+
+<form id='myForm' method="POST" action="keyword">
+<div id='TextBoxesGroup'>
+  <div class="form-group" id="TextBoxDiv1">
+    <label for="formGroupExampleInput2">Category:</label>
+    <select name="Category" id="Category" value=''></select>
+  </div>
+  <div class="form-group" id="TextBoxDiv1">
+    <label for="Sub_Category">Sub_Category:</label>
+    <input type="text" class="Sub_Category" id="Sub_Category" size="18">
+    <div>
+      <input type="checkbox" class="Share" id="Share" value="">
+      <label for="Sub_Category">是共用子分類</label>
+    </div>
+  </div>
+  <input type="submit" class="btn btn-primary"  value="新增Category"></button>
+</form>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+
+
+
+$('#Share').on('change', function(){
+   this.value = this.checked ? 1 : 0;
+   // alert(this.value);
+}).change();
+
+
+  myForm.addEventListener('submit',evt=>{
+  evt.preventDefault()
+  const form = evt.target
+  const infobar = $('#infobar');
+  const body = JSON.stringify({
+    Category: form.elements.Category.value,
+    Sub_Category: form.elements.Sub_Category.value,
+    Share: form.elements.Share.value,
+  })
+
+  const headers = {'Accept': 'application/json',"Content-type":"application/json; charser=UFT-8"}
+  const container = document.getElementById('myForm')
+    let isPass= true;
+    if(isPass){
+    fetch('/KeyWordSub_CategoryAdd',{method:'post',body,headers})
+    .then(resp=>{
+      if(resp.statuse<200||resp.status>=300)
+      throw alert("帳號密碼輸入錯誤")
+    })
+    .then(json=>{
+      console.log(json)
+    })
+    .then(obj => {
+      console.log(123456789)
+      console.log(obj);
+      if (obj='undefined') {
+          infobar.html('新增成功');
+          infobar.removeClass('alert-danger').addClass('alert-success');
+          setTimeout(() => {
+            window.close();;
+          }, 1500)
+      } else {
+          infobar.html('新增失敗');
+          infobar.removeClass('alert-success').addClass('alert-danger');
+      }
+      infobar.slideDown();
+      setTimeout(() => {
+          infobar.slideUp();
+      }, 2000)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+});
+
+
+$(document).ready(function(){
+
+var $Category = $('#Category');
+
+$.ajax({
+  type:'get',
+  dataType:'json',
+  url:'http://140.112.92.40:3333/KeyWordCategory',
+
+  success:function(Category){
+    $("#Category").prepend("<option value='' selected='selected'></option>");
+    Category.map(function(data){
+      $('#Category').append('<option value="'+ data.Category+'">'+ data.Category+'</option>');
+    })
+  }
+})
+})
+
+</script>
+
+</html>
